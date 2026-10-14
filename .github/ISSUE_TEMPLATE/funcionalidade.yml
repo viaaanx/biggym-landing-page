@@ -1,0 +1,39 @@
+name: Funcionalidade
+description: Proponha uma nova funcionalidade ou melhoria na landing page
+title: 'feat: '
+labels: ['funcionalidade']
+body:
+  - type: textarea
+    id: problema
+    attributes:
+      label: Qual necessidade da academia ou do visitante isto atende?
+    validations:
+      required: true
+  - type: textarea
+    id: criterios
+    attributes:
+      label: Critérios de aceitação
+      placeholder: |
+        - [ ] O visitante consegue...
+        - [ ] Em celular, a seção...
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Área
+      options:
+        - Navegação / menu
+        - Hero
+        - Diferenciais
+        - Alimentação
+        - Estrutura (galeria / lightbox)
+        - Instrutores
+        - Planos / WhatsApp
+        - Depoimentos
+        - Localização / mapa
+        - Rodapé
+        - SEO / metadados
+        - Pipeline / infra
+    validations:
+      required: true

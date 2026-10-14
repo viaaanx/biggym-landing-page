@@ -1,0 +1,31 @@
+name: Defeito
+description: Relate um erro encontrado no site
+title: 'fix: '
+labels: ['defeito']
+body:
+  - type: input
+    id: versao
+    attributes:
+      label: Versão / ambiente
+      description: 'Produção ou staging, e a versão (aparece em <meta name="app-version"> no código-fonte da página).'
+    validations:
+      required: true
+  - type: input
+    id: dispositivo
+    attributes:
+      label: Dispositivo e navegador
+      placeholder: 'Ex.: iPhone 13, Safari / Notebook, Chrome 141'
+    validations:
+      required: true
+  - type: textarea
+    id: passos
+    attributes:
+      label: Passos para reproduzir
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Resultado esperado x obtido
+    validations:
+      required: true

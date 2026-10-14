@@ -1,0 +1,13 @@
+# Normaliza finais de linha: evita que máquinas Windows gravem CRLF
+# em arquivos que rodam no Linux dos runners do GitHub Actions.
+* text=auto eol=lf
+
+# Binários: nunca converter
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.avif binary
+*.ico binary
+*.docx binary
+*.pdf binary
