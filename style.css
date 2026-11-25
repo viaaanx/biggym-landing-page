@@ -1033,6 +1033,15 @@ svg {
     white-space: nowrap;
 }
 
+.plano-economia {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--accent);
+    margin-top: 4px;
+}
+
+.destaque-plano .plano-economia { color: black; }
+
 .section-feedback { background-color: var(--bg-card); }
 
 .feedback-carousel {

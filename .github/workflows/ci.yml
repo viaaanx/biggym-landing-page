@@ -1,0 +1,51 @@
+# Integração contínua da BGLP (PGC 5).
+# Roda em todo PR para a main e em todo push na main. O PR só pode entrar
+# com este pipeline verde e 1 aprovação do par de revisão (PGC 3.3 e 5.2).
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  qualidade:
+    name: Lint, testes e build
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Node.js (versão do .nvmrc)
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .nvmrc
+          cache: npm
+
+      - name: Instala dependências travadas (package-lock.json)
+        run: npm ci
+
+      - name: Lint (HTMLHint, Stylelint, ESLint)
+        run: npm run lint
+
+      - name: Testes com quality gate de cobertura (PGC 5.3)
+        run: npm run test:coverage
+
+      - name: Build (só os arquivos publicados)
+        run: npm run build
+
+      - name: Guarda o dist/ gerado
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist
+          path: dist/
+          retention-days: 7
