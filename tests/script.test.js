@@ -161,3 +161,43 @@ describe('animação de entrada das seções', () => {
     });
   });
 });
+
+describe('economia dos planos (Issue #2)', () => {
+  beforeEach(async () => {
+    montarPagina();
+    await carregarScript();
+  });
+
+  const selo = (titulo) => {
+    const card = [...document.querySelectorAll('.plano-card')]
+      .find((c) => c.querySelector('.plano-titulo').textContent === titulo);
+    return card.querySelector('.plano-economia');
+  };
+
+  it('calcula (preço do Mensal − preço do plano) × meses, sem erro de arredondamento', () => {
+    const { calcularEconomia } = window.BigGym;
+    expect(calcularEconomia(120, 95, 6)).toBe(150);
+    expect(calcularEconomia(120, 89.9, 12)).toBe(361.2);
+  });
+
+  it('não dá economia para o próprio Mensal nem para plano mais caro', () => {
+    const { calcularEconomia } = window.BigGym;
+    expect(calcularEconomia(120, 120, 1)).toBe(0);
+    expect(calcularEconomia(120, 130, 6)).toBe(0);
+  });
+
+  it('recusa preço negativo, meses inválidos e valores que não são número', () => {
+    const { calcularEconomia } = window.BigGym;
+    expect(calcularEconomia(120, -10, 6)).toBe(0);
+    expect(calcularEconomia(120, 95, 0)).toBe(0);
+    expect(calcularEconomia(120, 95, -6)).toBe(0);
+    expect(calcularEconomia(120, Number.NaN, 6)).toBe(0);
+    expect(calcularEconomia('120', 95, 6)).toBe(0);
+  });
+
+  it('mostra o selo no Semestral e no Anual, e nada no Mensal', () => {
+    expect(selo('Plano Semestral').textContent).toBe('Economize R$ 150,00 no semestre');
+    expect(selo('Plano Anual').textContent).toBe('Economize R$ 361,20 no ano');
+    expect(selo('Plano Mensal')).toBeNull();
+  });
+});

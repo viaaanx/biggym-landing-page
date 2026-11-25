@@ -385,3 +385,42 @@
 
   stats.forEach((el) => obs.observe(el));
 })();
+// Economia dos planos (Issue #2): (preço do Mensal − preço do plano) × meses.
+// Fica em window.BigGym para os testes chamarem a regra direto.
+(function () {
+  function calcularEconomia(precoReferencia, precoMensal, meses) {
+    const valores = [precoReferencia, precoMensal, meses];
+    if (valores.some((v) => typeof v !== "number" || !Number.isFinite(v))) return 0;
+    if (precoReferencia < 0 || precoMensal < 0 || meses <= 0) return 0;
+    // Em centavos, para 120,00 − 89,90 não virar 30,099999...
+    const centavos = (Math.round(precoReferencia * 100) - Math.round(precoMensal * 100)) * meses;
+    return centavos > 0 ? centavos / 100 : 0;
+  }
+
+  function formatarReais(valor) {
+    return "R$ " + valor.toFixed(2).replace(".", ",");
+  }
+
+  function periodo(meses) {
+    if (meses === 6) return "no semestre";
+    if (meses === 12) return "no ano";
+    return "em " + meses + " meses";
+  }
+
+  window.BigGym = Object.assign(window.BigGym || {}, { calcularEconomia });
+
+  const cards = Array.from(document.querySelectorAll(".plano-card[data-preco-mensal][data-meses]"));
+  const referencia = cards.find((c) => Number(c.dataset.meses) === 1);
+  if (!referencia) return;
+  const precoReferencia = Number(referencia.dataset.precoMensal);
+
+  cards.forEach((card) => {
+    const meses = Number(card.dataset.meses);
+    const economia = calcularEconomia(precoReferencia, Number(card.dataset.precoMensal), meses);
+    if (economia <= 0) return;
+    const selo = document.createElement("p");
+    selo.className = "plano-economia";
+    selo.textContent = "Economize " + formatarReais(economia) + " " + periodo(meses);
+    card.querySelector(".plano-preco")?.insertAdjacentElement("afterend", selo);
+  });
+})();
